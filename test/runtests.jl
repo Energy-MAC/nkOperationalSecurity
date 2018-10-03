@@ -1,1 +1,2 @@
-1 == 1
+using Test
+@test 1 == 1

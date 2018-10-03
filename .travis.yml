@@ -24,4 +24,4 @@ matrix:
 
 ## uncomment the following lines to override the default test script
 script:
-  - julia --check-bounds=yes --depwarn=no --color=yes --project -e "include("test/runtests.jl");"
+  - julia --check-bounds=yes --depwarn=no --color=yes --project -e "test/runtests.jl"
