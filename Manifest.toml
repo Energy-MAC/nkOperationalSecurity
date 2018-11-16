@@ -303,12 +303,10 @@ deps = ["Dates", "LibGit2", "Markdown", "Printf", "REPL", "Random", "SHA", "UUID
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [[PowerSystems]]
-deps = ["AxisArrays", "CSV", "Compat", "DataFrames", "Dates", "InfrastructureModels", "JSON", "LinearAlgebra", "Logging", "SparseArrays", "TimeSeries"]
-git-tree-sha1 = "486c5f3e1dca4a4f72276b6fe27f85e60361da47"
-repo-rev = "master"
-repo-url = "https://github.com/NREL/PowerSystems.jl.git"
-uuid = "c512b964-a17e-11e8-344c-11d7c2eac237"
-version = "0.2.1"
+deps = ["AxisArrays", "CSV", "Compat", "DataFrames", "Dates", "InfrastructureModels", "JSON", "LinearAlgebra", "Logging", "SparseArrays", "Test", "TimeSeries"]
+git-tree-sha1 = "c76b302a43a2ee8663a1e6b24e4cf9646365f515"
+uuid = "bcd98974-b02a-5e2f-9ee0-a103f5c450dd"
+version = "0.2.0"
 
 [[Printf]]
 deps = ["Unicode"]
