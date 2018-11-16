@@ -35,7 +35,7 @@ function simple_lp(flag::Bool = true)
 
     m, n = size(A); # m = number of rows of A, n = number of columns of A
 
-    model = JuMP.Model(with_optimizer(Cbc.CbcOptimizer))
+    model = JuMP.Model(with_optimizer(GLPK.Optimizer))
     @variable(model, x[1:n] >= 0) 
     @constraint(model, [i=1:m], sum(A[i,j]*x[j] for j in 1:n) == b[i])
     @objective(model, Min, sum(c[j]*x[j] for j in 1:n)) 
