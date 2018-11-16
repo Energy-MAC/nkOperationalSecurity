@@ -17,6 +17,7 @@ function simple_ed()
    @variable(ED, P_th[set_gens] >= 0)
    @constraint(ED, P_max[i = set_gens], P_th[i] <= [g.tech. activepowerlimits.max for g in generators14 if g.name == i][1])
    @constraint(ED, Balance, sum(P_th[i] for i in set_gens)== sum(loads14[j].maxactivepower for j in 1:length(loads14)))
+    #This comes from PowerSystems
    @objective(ED, Min, sum(generators14[i].econ.variablecost(P_th[generators14[i].name]) for i in 1:length(generators14)))
    JuMP.optimize!(ED)
    
