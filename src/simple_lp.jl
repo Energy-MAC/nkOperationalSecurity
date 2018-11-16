@@ -1,5 +1,5 @@
 function simple_lp(flag::Bool = false)
-    lp = Model(with_optimizer(GLPK.Optimizer), print)
+    lp = Model(with_optimizer(GLPK.Optimizer))
     set1 = 1:10
     set2 = 3:5
     @variable(lp, x[set1] >= 0)
