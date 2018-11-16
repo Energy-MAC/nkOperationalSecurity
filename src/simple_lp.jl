@@ -11,13 +11,19 @@ function simple_lp(flag::Bool = false)
     return lp
 end
 
-function get_solution(m::JuMP.Model)
-    #assumes the variables are named x 
-    if JuMP.primal_status(m) != 1 
-        @error("the model is not properly solved")
-    end
-    
-    for var in m[:x]
+function simple_ed()
+   ED = Model(with_optimizer(Ipopt.Optimizer))
+   set_gens = [g.name for g in  generators14 if g.available]
+   @variable(ED, P_th[set_gens] >= 0)
+   @constraint(ED, P_max[i = set_gens], P_th[i] <= [g.tech. activepowerlimits.max for g in generators14 if g.name == i][1])
+   @constraint(ED, Balance, sum(P_th[i] for i in set_gens)== sum(loads14[j].maxactivepower for j in 1:length(loads14)))
+    #This comes from PowerSystems
+   @objective(ED, Min, sum(generators14[i].econ.variablecost(P_th[generators14[i].name]) for i in 1:length(generators14)))
+   JuMP.optimize!(ED)
+   
+   for var in ED[:P_th]
         println(var, JuMP.value(var))
-    end
+   end
+    
+    
 end
