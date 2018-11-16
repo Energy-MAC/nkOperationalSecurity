@@ -1,2 +1,3 @@
 using Test
-@test 1 == 1
+@test include("../src/nKOS.jl");
+@test try simple_lp() end
