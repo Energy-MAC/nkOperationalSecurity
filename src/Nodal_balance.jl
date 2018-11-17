@@ -42,7 +42,7 @@ function nodal_balance(m::JuMP.Model, buses, branches, generators, loads)
     
     add_flows(m, d_netinjection_p, branches)
     
-    pf_balance = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(bus_name_index), sys.time_periods), bus_name_index, time_index)
+    pf_balance = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(bus_name_index)), bus_name_index)
 
     for (ix,bus) in enumerate(bus_name_index)
 
