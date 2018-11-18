@@ -14,9 +14,8 @@ function add_flows(m::JuMP.Model, netinjection, branches::Array{<:Branch})
 end
 
 
-function varnetinjectiterate!(netinjection::A, variable::JumpVariable, time_periods::Int64, devices::Array{T}) where {A <: JumpExpressionMatrix, T <: PowerSystems.Generator}
-
-    for t in 1:time_periods, d in devices
+function varnetinjectiterate!(netinjection::A, variable::JumpVariable, devices::Array{<: PowerSystems.Generator}) 
+    for d in devices
 
         isassigned(netinjection,  d.bus.number,t) ? JuMP.add_to_expression!(netinjection[d.bus.number,t], variable[d.name, t]) : netinjection[d.bus.number,t] = variable[d.name, t];
 
@@ -24,9 +23,9 @@ function varnetinjectiterate!(netinjection::A, variable::JumpVariable, time_peri
 
 end
 
-function varnetinjectiterate!(netinjection::A, variable::JumpVariable, time_periods::Int64, devices::Array{T}) where {A <: JumpExpressionMatrix, T <: PowerSystems.ElectricLoad}
+function varnetinjectiterate!(netinjection::A, variable::JumpVariable, devices::Array{T <: PowerSystems.ElectricLoad}})
 
-    for t in 1:time_periods, d in devices
+    for d in devices
 
         isassigned(netinjection,  d.bus.number,t) ? JuMP.add_to_expression!(netinjection[d.bus.number,t], -1*variable[d.name, t]) : netinjection[d.bus.number,t] = -1*variable[d.name, t];
 
@@ -39,6 +38,9 @@ function nodal_balance(m::JuMP.Model, buses, branches, generators, loads)
     d_netinjection_p =  JumpAffineExpressionArray(undef, length(buses))
     
     bus_name_index = [b.name for b in buses]
+        
+    varnetinjectiterate!(d_netinjection_p, m[:P_th], generators)
+    varnetinjectiterate!(d_netinjection_p, m[:D], loads)
     
     add_flows(m, d_netinjection_p, branches)
     
@@ -53,28 +55,3 @@ function nodal_balance(m::JuMP.Model, buses, branches, generators, loads)
     JuMP.register_object(m, :NodalFlowBalance, pf_balance)
 
 end
-    
-    
-    
-function nodalflowbalance(m::JuMP.Model, netinjection::BalanceNamedTuple, system_formulation::Type{S}, sys::PowerSystems.PowerSystem) where {S <: AbstractDCPowerModel}
-
-    time_index = 1:sys.time_periods
-    bus_name_index = [b.name for b in sys.buses]
-
-    add_flows(m, netinjection, system_formulation, sys)
-
-    pf_balance = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(bus_name_index), sys.time_periods), bus_name_index, time_index)
-
-        for t in time_index, (ix,bus) in enumerate(bus_name_index)
-
-            isassigned(netinjection.var_active,ix, t) ? true : error("Islanded Bus in the system")
-
-            pf_balance[bus,t] = @constraint(m, netinjection.var_active[ix, t] == netinjection.timeseries_active[ix, t])
-        
-        end
-
-        JuMP.register_object(m, :NodalFlowBalance, pf_balance)
-
-    return m
-    
-end    

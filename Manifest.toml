@@ -176,7 +176,7 @@ version = "0.19.0"
 
 [[JuMP]]
 deps = ["Calculus", "Compat", "DataStructures", "ForwardDiff", "LinearAlgebra", "MathOptInterface", "NaNMath", "Printf", "Random", "Statistics"]
-git-tree-sha1 = "969b7495b426b26882121b0a639649dfe354d987"
+git-tree-sha1 = "8299642c6579daac7ef4a69074f6d6b7725996d6"
 repo-rev = "master"
 repo-url = "https://github.com/JuliaOpt/JuMP.jl.git"
 uuid = "4076af6c-e467-56ae-b986-b466b2749572"
@@ -264,9 +264,9 @@ version = "1.0.2"
 
 [[Parsers]]
 deps = ["Dates", "Mmap", "Test", "WeakRefStrings"]
-git-tree-sha1 = "03375f006e75773b58cbc293bd958aae4152ed1b"
+git-tree-sha1 = "949ca36d47010bee093254467166487c921d490b"
 uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
-version = "0.2.13"
+version = "0.2.14"
 
 [[Pkg]]
 deps = ["Dates", "LibGit2", "Markdown", "Printf", "REPL", "Random", "SHA", "UUIDs"]

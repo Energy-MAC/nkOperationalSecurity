@@ -10,3 +10,4 @@ const JumpAffineExpressionArray = Array{JuMP.GenericAffExpr{Float64,JuMP.Variabl
 
 include("simple_lp.jl")
 include("../data/data_14bus_pu.jl")
+include("Primal_problem")
