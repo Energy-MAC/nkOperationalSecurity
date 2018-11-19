@@ -92,7 +92,7 @@ function branch_flows(m::JuMP.Model, branches)
 
     for br in branches 
 
-        flow_bal[br.name] = @constraint(m, fl[br.name] == (1-m[:z][br.name])*(1/br.x)*(m[:θ][br.connectionpoints.from.name]-m[:θ][br.connectionpoints.to.name]))
+        flow_bal[br.name] = @constraint(m, fl[br.name] == (1/br.x)*(m[:θ][br.connectionpoints.from.name]-m[:θ][br.connectionpoints.to.name]))
 
     end      
    
@@ -120,7 +120,7 @@ function primal_problem(generators, buses, branches, loads)
 
     @variable(PM, fl[set_lines], start=0.0) 
 
-    @variable(PM, z[set_lines] == 0.0, start=0.0) # add the Bin tag Later in order to make this code run with Ipopt
+    #@variable(PM, z[set_lines] == 0.0, start=0.0) # add the Bin tag Later in order to make this code run with Ipopt
 
     @variable(PM, θ[set_buses], start=0.0);  
         
