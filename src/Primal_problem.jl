@@ -80,7 +80,25 @@ function anglelimits(m::JuMP.Model, θ, devices::Array{B,1}) where {B <: PowerSy
     JuMP.register_object(m, :θ_max, θ_max)
     JuMP.register_object(m, :θ_min, θ_min)
         
-end        
+end      
+            
+function branch_flows(m::JuMP.Model, branches)            
+
+    fl = m[:fl]
+
+    name_index = fl.axes[1]
+
+    flow_bal = JuMP.JuMPArray(Array{ConstraintRef}(undef, length(name_index)), name_index)
+
+    for br in branches 
+
+        flow_bal[br.name] = @constraint(m, fl[br.name] == (1-m[:z][br.name])*(1/br.x)*(m[:θ][br.connectionpoints.from.name]-m[:θ][br.connectionpoints.to.name]))
+
+    end      
+   
+    JuMP.register_object(m, :flow_bal, flow_bal)                    
+
+end                
     
 function primal_problem(generators, buses, branches, loads)    
     #Instantiate Model
@@ -96,9 +114,9 @@ function primal_problem(generators, buses, branches, loads)
     @variable(PM, P_th[set_gens], lower_bound = 0)
     @variable(PM, D[set_loads], lower_bound =  0) 
         
-    for (ix,d) in enumerate(PM[:D])
-        JuMP.set_start_value(d,loads[ix].maxactivepower)
-    end
+    #for (ix,d) in enumerate(PM[:D])
+    #    JuMP.set_start_value(d,loads[ix].maxactivepower)
+    #end
 
     @variable(PM, fl[set_lines]) 
 
@@ -117,8 +135,10 @@ function primal_problem(generators, buses, branches, loads)
     thermalflowlimits(PM, fl, branches)
     anglelimits(PM, θ, buses)
     demand_limits(PM, D, loads)
-    nodal_balance(PM, buses, branches, generators, loads)            
+    nodal_balance(PM, buses, branches, generators, loads) 
+    branch_flows(PM, branches)             
                 
+    @objective(PM, Max, sum(D[i] for i in set_loads))            
                  
     return PM 
                 
