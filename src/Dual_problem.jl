@@ -15,7 +15,7 @@ end
             
             
 function dual_loads(m, λ, β_plus, set_buses, devices)
-    name_index = β_plus.axes[1]
+    name_index = β_plus.axes[1] 
     dual_load = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index) 
 
     for (ix, name) in enumerate(name_index)
@@ -68,9 +68,9 @@ function dual_objective(m, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minu
 end
 
 
-function dual_problem(generators, loads, branches, nodes)
+function dual_problem(generators, nodes, branches, loads)
     set_gens = [g.name for g in generators if g.available];
-    set_loads = [l.name for l in loads];
+    set_loads = [l.name for l in loads if l.available];
     set_buses = [b.name for b in nodes];
     set_branches = [ell.name for ell in branches];
     z = zeros(length(set_branches))
