@@ -1,4 +1,4 @@
-function generators_limits(m, P_th, devices)
+function generators_limits(m::JuMP.Model, P_th, devices)
  
     name_index = P_th.axes[1]
 
@@ -23,7 +23,64 @@ function generators_limits(m, P_th, devices)
         
 end
     
+function demand_limits(m::JuMP.Model, D, devices)
+ 
+    name_index = D.axes[1]
+
+    D_max = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index)
+
+    for (ix, name) in enumerate(name_index)
+
+        if name == devices[ix].name
+            D_max[name] = @constraint(m, D[name] <= devices[ix].maxactivepower)
+
+        else
+            error("Bus name in Array and variable do not match")
+        end
+
+    end
     
+    JuMP.register_object(m, :D_max, D_max)
+        
+end    
+    
+function thermalflowlimits(m::JuMP.Model, fbr, devices::Array{B,1}) where {B <: PowerSystems.Branch}
+
+    name_index = fbr.axes[1]
+
+    Flow_max_tf = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index)
+    Flow_max_ft = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index)
+
+    for (ix, name) in enumerate(name_index)
+        if name == devices[ix].name
+            Flow_max_tf[name] = @constraint(m, fbr[name] <= devices[ix].rate)
+            Flow_max_ft[name] = @constraint(m, fbr[name] >= -devices[ix].rate)
+        else
+            error("Branch name in Array and variable do not match")
+        end
+    end
+
+    JuMP.register_object(m, :Flow_max_ToFrom, Flow_max_tf)
+    JuMP.register_object(m, :Flow_max_FromTo, Flow_max_ft)
+        
+end     
+        
+function anglelimits(m::JuMP.Model, θ, devices::Array{B,1}) where {B <: PowerSystems.Bus}
+
+    name_index = θ.axes[1]
+
+    θ_max = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index)
+    θ_min = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index)
+
+    for (ix, name) in enumerate(name_index)
+        θ_max[name] = @constraint(m, θ[name] <= 1.04)
+        θ_min[name] = @constraint(m, θ[name] >= -1.04)
+    end
+
+    JuMP.register_object(m, :θ_max, θ_max)
+    JuMP.register_object(m, :θ_min, θ_min)
+        
+end        
     
 function primal_problem(generators, buses, branches, loads)    
     #Instantiate Model
@@ -40,7 +97,7 @@ function primal_problem(generators, buses, branches, loads)
     @variable(PM, D[set_loads], lower_bound =  0) 
         
     for (ix,d) in enumerate(PM[:D])
-        JuMP.set_start_value(d,loads14[ix].maxactivepower)
+        JuMP.set_start_value(d,loads[ix].maxactivepower)
     end
 
     @variable(PM, fl[set_lines]) 
@@ -56,5 +113,13 @@ function primal_problem(generators, buses, branches, loads)
         
     JuMP.fix(θ["Bus 1"],0.0)     
     
-    generators_limits(PM, P_th, generators)        
+    generators_limits(PM, P_th, generators)
+    thermalflowlimits(PM, fl, branches)
+    anglelimits(PM, θ, buses)
+    demand_limits(PM, D, loads)
+    nodal_balance(PM, buses, branches, generators, loads)            
+                
+                 
+    return PM 
+                
 end 
