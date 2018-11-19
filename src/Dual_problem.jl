@@ -30,7 +30,7 @@ function dual_loads(m, λ, β_plus, set_buses, devices)
 end
             
             
-function dual_branches(m, λ, α_plus, α_minus, set_buses, devices)
+function dual_branches(m, λ, η, α_plus, α_minus, set_buses, devices)
     name_index = α_plus.axes[1]
     dual_branch = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index) 
 
@@ -92,9 +92,9 @@ function dual_problem(generators, nodes, branches, loads)
     
     dual_gens(DM, λ, μ_plus, set_buses, generators14)
     dual_loads(DM, λ, β_plus, set_buses, loads14)                
-    dual_branches(DM, λ, α_plus, α_minus, set_buses, branches14)                
+    dual_branches(DM, λ, η, α_plus, α_minus, set_buses, branches14)                
     dual_balance_no_z(DM, nodes14, branches14, generators14, loads14)
-    dual_balance_bus1_no_z(DM, buses, branches14, generators14, loads14)            
+    dual_balance_bus1_no_z(DM, nodes14, branches14, generators14, loads14)            
                 
     obj = dual_objective(DM, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes)           
     
