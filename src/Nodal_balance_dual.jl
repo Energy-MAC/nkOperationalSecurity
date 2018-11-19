@@ -8,7 +8,7 @@ function dual_balance_zvar(m::JuMP.Model, buses, branches, generators, loads)
 
         !isassigned(dual_bal,n.number) ? dual_bal[n.number] = AffExpr(0.0) : true
 
-        JuMP.add_to_expression!(dual_bal[n.number], (-m[:\nu_plus][n.name] + m[:\nu_minus][n.name]) )
+        JuMP.add_to_expression!(dual_bal[n.number], (-m[:ν_minus][n.name] + m[:ν_plus][n.name]) )
 
     end
 
@@ -16,11 +16,11 @@ function dual_balance_zvar(m::JuMP.Model, buses, branches, generators, loads)
 
        !isassigned(dual_bal,b.connectionpoints.from.number) ? dual_bal[b.connectionpoints.from.number] = AffExpr(0.0) : true 
 
-       JuMP.add_to_expression!(dual_bal[b.connectionpoints.from.number],((z[b.name]-1)*m[:\eta][b.name]*(1/b.x) )
+       JuMP.add_to_expression!(dual_bal[b.connectionpoints.from.number],((z[b.name]-1)*m[:η][b.name]*(1/b.x) ))
 
        !isassigned(dual_bal,b.connectionpoints.to.number) ? dual_bal[b.connectionpoints.to.number] = AffExpr(0.0) : true     
 
-       JuMP.add_to_expression!(dual_bal[b.connectionpoints.to.number],(-(z[b.name]-1)*m[:\eta][b.name]*(1/b.x) ))
+       JuMP.add_to_expression!(dual_bal[b.connectionpoints.to.number],(-(z[b.name]-1)*m[:η][b.name]*(1/b.x) ))
 
     end
     
@@ -42,10 +42,10 @@ function dual_balance_bus1(m::JuMP.Model, buses, branches, generators, loads)
 
     bus_name_index = buses[1].name
 
-    JuMP.add_to_expression!(dual_bal_bus1, m[:\zeta] )
-
-    for b in branches if b.connectionpoints.from.number == 1
-        JuMP.add_to_expression!(dual_bal_bus1,( (z[b.name]-1)*m[:\eta][b.name]*(1/b.x) )
+    JuMP.add_to_expression!(dual_bal_bus1, m[:ζ] )
+    
+    for b in [br for br in branches if b.connectionpoints.from.number == 1]
+        JuMP.add_to_expression!(dual_bal_bus1,( (z[b.name]-1)*m[:η][b.name]*(1/b.x) ))
     end
     
 
@@ -57,8 +57,6 @@ end
 
 
     
-            
-            
 function dual_balance_no_z(m::JuMP.Model, buses, branches, generators, loads)
     
     dual_bal =  JumpAffineExpressionArray(undef, length(buses))
@@ -69,7 +67,7 @@ function dual_balance_no_z(m::JuMP.Model, buses, branches, generators, loads)
 
         !isassigned(dual_bal,n.number) ? dual_bal[n.number] = AffExpr(0.0) : true
 
-        JuMP.add_to_expression!(dual_bal[n.number], (-m[:ν_plus][n.name] + m[:ν_minus][n.name]) )
+        JuMP.add_to_expression!(dual_bal[n.number], (m[:ν_plus][n.name] - m[:ν_minus][n.name]) )
 
     end
 
@@ -98,7 +96,7 @@ function dual_balance_no_z(m::JuMP.Model, buses, branches, generators, loads)
 
 end
         
-            
+
 function dual_balance_bus1_no_z(m::JuMP.Model, buses, branches, generators, loads)
     dual_bal_bus1 =  AffExpr(0.0)
 
@@ -118,6 +116,5 @@ function dual_balance_bus1_no_z(m::JuMP.Model, buses, branches, generators, load
     JuMP.register_object(m, :Dual_Balance_Bus1, dual_balance_bus1)
                 
 end
-
 
                 
