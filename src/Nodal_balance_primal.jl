@@ -1,14 +1,3 @@
-function add_flows(m::JuMP.Model, netinjection, branches::Array{<:Branch}) 
-
-    fbr = m[:fbr]
-    branch_name_index = m[:fbr].axes[1]
-
-
-
-
-end
-
-
 function nodal_balance(m::JuMP.Model, buses, branches, generators, loads)
     
     netinjection =  JumpAffineExpressionArray(undef, length(buses))
