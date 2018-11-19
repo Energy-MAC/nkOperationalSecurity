@@ -111,18 +111,18 @@ function primal_problem(generators, buses, branches, loads)
     set_buses = [b.name for b in buses]
     
     #generate variables     
-    @variable(PM, P_th[set_gens], lower_bound = 0)
+    @variable(PM, P_th[set_gens], lower_bound = 0, start=0.0)
     @variable(PM, D[set_loads], lower_bound =  0) 
         
-    #for (ix,d) in enumerate(PM[:D])
-    #    JuMP.set_start_value(d,loads[ix].maxactivepower)
-    #end
+    for (ix,d) in enumerate(PM[:D])
+        JuMP.set_start_value(d,loads[ix].maxactivepower)
+    end
 
-    @variable(PM, fl[set_lines]) 
+    @variable(PM, fl[set_lines], start=0.0) 
 
-    @variable(PM, z[set_lines] == 0.0) # add the Bin tag Later in order to make this code run with Ipopt
+    @variable(PM, z[set_lines] == 0.0, start=0.0) # add the Bin tag Later in order to make this code run with Ipopt
 
-    @variable(PM, θ[set_buses]);  
+    @variable(PM, θ[set_buses], start=0.0);  
         
     for name in θ.axes[1][2:end]
         JuMP.set_lower_bound(θ[name],-1.57)
@@ -131,6 +131,7 @@ function primal_problem(generators, buses, branches, loads)
         
     JuMP.fix(θ["Bus 1"],0.0)     
     
+    #Constraints            
     generators_limits(PM, P_th, generators)
     thermalflowlimits(PM, fl, branches)
     anglelimits(PM, θ, buses)
