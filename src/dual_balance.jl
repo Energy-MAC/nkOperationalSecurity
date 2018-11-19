@@ -56,8 +56,7 @@ function dual_balance_bus1(m::JuMP.Model, buses, branches, generators, loads)
 end
 
 
-
-            
+    
             
             
 function dual_balance_no_z(m::JuMP.Model, buses, branches, generators, loads)
