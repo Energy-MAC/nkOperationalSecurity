@@ -8,7 +8,7 @@ function dual_balance_zvar(m::JuMP.Model, buses, branches, generators, loads)
 
         !isassigned(dual_bal,n.number) ? dual_bal[n.number] = AffExpr(0.0) : true
 
-        JuMP.add_to_expression!(dual_bal[n.number], (-m[:ν_minus _plus][n.name] + m[:ν_minus][n.name]) )
+        JuMP.add_to_expression!(dual_bal[n.number], (-m[:ν_minus][n.name] + m[:ν_plus][n.name]) )
 
     end
 
