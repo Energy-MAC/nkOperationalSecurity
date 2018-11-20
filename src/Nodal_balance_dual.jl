@@ -43,7 +43,6 @@ function dual_balance_bus1_no_z(m::JuMP.Model, buses, branches, generators, load
 
     bus_name_index = buses[1].name
 
-    JuMP.add_to_expression!(dual_bal_bus1, m[:ζ] )
     
     br_aux = [br for br in branches if br.connectionpoints.from.number == 1]
     
@@ -52,7 +51,7 @@ function dual_balance_bus1_no_z(m::JuMP.Model, buses, branches, generators, load
     end
     
 
-    dual_balance_bus1 = @constraint(m, dual_bal_bus1 == 0)
+    dual_balance_bus1 = @constraint(m, dual_bal_bus1 + m[:ζ] == 0)
 
     JuMP.register_object(m, :Dual_Balance_Bus1, dual_balance_bus1)
                 
