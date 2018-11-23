@@ -8,7 +8,7 @@ function dual_balance_zvar(m::JuMP.Model, buses, branches, generators, loads)
 
         !isassigned(dual_bal,n.number) ? dual_bal[n.number] = JuMP.GenericQuadExpr{Float64,VariableRef}() : true
 
-        JuMP.add_to_expression!(dual_bal[n.number], (-m[:ν_minus][n.name] + m[:ν_plus][n.name]) )
+        JuMP.add_to_expression!(dual_bal[n.number], (m[:ν_plus][n.name] - m[:ν_minus][n.name]) )
 
     end
 
@@ -37,6 +37,8 @@ function dual_balance_zvar(m::JuMP.Model, buses, branches, generators, loads)
 
 end
             
+
+
 function dual_balance_bus1_zvar(m::JuMP.Model, buses, branches, generators, loads)
     dual_bal_bus1 =  JuMP.GenericQuadExpr{Float64,VariableRef}()
 

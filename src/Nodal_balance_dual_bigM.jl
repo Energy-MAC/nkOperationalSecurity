@@ -82,8 +82,3 @@ function bigM_constraints(m::JuMP.Model, devices, bigM)
 end
             
             
-function dual_demand_bound(m, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes)
-        dual_obj = dual_objective(m, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes)
-        dual_obj_constraint = @constraint(m, dual_obj <= 0.9*2.57)
-        JuMP.register_object(m, :Dual_obj_constraint, dual_obj_constraint)        
-end

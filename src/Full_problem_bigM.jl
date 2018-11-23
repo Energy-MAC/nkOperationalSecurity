@@ -1,14 +1,4 @@
-function full_objective_bigM(m, z, branches)
-    obj_func = AffExpr(0.0)
-    
-    for b in branches
-       JuMP.add_to_expression!(obj_func, z[b.name])
-    end
-    
-    return obj_func
-end
-
-function full_problem_bigM(generators, nodes, branches, loads, bigM)
+function bigM_version(generators, nodes, branches, loads, bigM)
     set_gens = [g.name for g in generators if g.available];
     set_loads = [l.name for l in loads if l.available];
     set_buses = [b.name for b in nodes];
@@ -35,10 +25,9 @@ function full_problem_bigM(generators, nodes, branches, loads, bigM)
     dual_balance_bus1_bigM(FP, nodes, branches, generators, loads)
     bigM_constraints(FP, branches, bigM)
     dual_demand_bound(FP, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes)           
-                
-    obj = full_objective_bigM(FP, z, branches)           
+       
     
-    @objective(FP, Min, obj)                        
+    @objective(FP, Min, sum(z[i] for i in set_branches))                       
                     
     return(FP)
                 
