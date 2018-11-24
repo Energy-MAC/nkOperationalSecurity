@@ -109,7 +109,15 @@ function primal_problem(generators, buses, branches, loads)
     set_loads = [ld.name for ld in loads if ld.available] 
     set_lines = [ln.name for ln in branches if ln.available]
     set_buses = [b.name for b in buses]
+    slackBus=0
     
+    #get slack bus
+    for b in buses
+        if b.bustype=="SF"
+            slackBus = b.name
+        end
+    end
+                
     #generate variables     
     @variable(PM, P_th[set_gens], lower_bound = 0, start=0.0)
     @variable(PM, D[set_loads], lower_bound =  0) 
@@ -124,12 +132,14 @@ function primal_problem(generators, buses, branches, loads)
 
     @variable(PM, θ[set_buses], start=0.0);  
         
-    for name in θ.axes[1][2:end]
-        JuMP.set_lower_bound(θ[name],-1.57)
-        JuMP.set_upper_bound(θ[name],1.57)
+    for name in θ.axes[1][1:end]
+        if name != slackBus
+            JuMP.set_lower_bound(θ[name],-1.57)
+            JuMP.set_upper_bound(θ[name],1.57)
+        end 
     end
         
-    JuMP.fix(θ["Bus 1"],0.0)     
+    JuMP.fix(θ[slackBus],0.0)     
     
     #Constraints            
     generators_limits(PM, P_th, generators)

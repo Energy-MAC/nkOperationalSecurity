@@ -1,4 +1,11 @@
 function dual_balance_no_z(m::JuMP.Model, buses, branches, generators, loads)
+    #get slack bus
+    slackBus=0
+    for b in buses
+        if b.bustype=="SF"
+            slackBus = b.name
+        end
+    end
     
     dual_bal =  JumpAffineExpressionArray(undef, length(buses))
 
@@ -27,9 +34,10 @@ function dual_balance_no_z(m::JuMP.Model, buses, branches, generators, loads)
     
     dual_balance = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(bus_name_index)), bus_name_index)
 
-    for (ix,bus) in enumerate(bus_name_index[2:end])
-
-        dual_balance[bus] = @constraint(m, dual_bal[ix] == 0)
+    for (ix,bus) in enumerate(bus_name_index[1:end])
+        if bus != slackBus
+            dual_balance[bus] = @constraint(m, dual_bal[ix] == 0)
+        end 
         
     end
 
@@ -39,9 +47,17 @@ end
         
 
 function dual_balance_bus1_no_z(m::JuMP.Model, buses, branches, generators, loads)
+    #get slack bus
+    slackBus=0
+    for b in buses
+        if b.bustype=="SF"
+            slackBus = b.name
+        end
+    end
+    
     dual_bal_bus1 =  AffExpr(0.0)
 
-    bus_name_index = buses[1].name
+    bus_name_index = slackBus
 
     
     br_aux = [br for br in branches if br.connectionpoints.from.number == 1]
