@@ -1,4 +1,4 @@
-function NL_version(generators, nodes, branches, loads)
+function NL_version(generators, nodes, branches, loads, min_load_percent)
     set_gens = [g.name for g in generators if g.available];
     set_loads = [l.name for l in loads if l.available];
     set_buses = [b.name for b in nodes];
@@ -19,12 +19,12 @@ function NL_version(generators, nodes, branches, loads)
     @variable(DM, ζ, start = 0.0);
     @variable(DM, z[set_branches], lower_bound = 0.0, upper_bound = 1.0, start = 1.0);
     
-    dual_gens(DM, λ, μ_plus, set_buses, generators14)
-    dual_loads(DM, λ, β_plus, set_buses, loads14)                
-    dual_branches(DM, λ, η, α_plus, α_minus, set_buses, branches14)                
-    dual_balance_zvar(DM, nodes14, branches14, generators14, loads14)
-    dual_balance_bus1_zvar(DM, nodes14, branches14, generators14, loads14)            
-    dual_demand_bound(DM, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes)                       
+    dual_gens(DM, λ, μ_plus, set_buses, generators)
+    dual_loads(DM, λ, β_plus, set_buses, loads)                
+    dual_branches(DM, λ, η, α_plus, α_minus, set_buses, branches)                
+    dual_balance_zvar(DM, nodes, branches, generators, loads)
+    dual_balance_bus1_zvar(DM, nodes, branches, generators, loads)            
+    dual_demand_bound(DM, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes, min_load_percent)
     
     @objective(DM, Min, sum(z[i] for i in set_branches))
                     
