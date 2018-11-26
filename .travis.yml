@@ -24,4 +24,5 @@ matrix:
 
 ## uncomment the following lines to override the default test script
 script:
+  - julia --check-bounds=yes --depwarn=no --color=yes --project "Pkg.instantiate()"
   - julia --check-bounds=yes --depwarn=no --color=yes --project "test/runtests.jl"
