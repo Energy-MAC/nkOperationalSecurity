@@ -1,5 +1,5 @@
 using Test
-@test include("../src/nKOS.jl");
+@test try include("../src/nKOS.jl"); true finally end;
 
 #=
 @testset "Run basics" begin
