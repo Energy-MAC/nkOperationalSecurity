@@ -1,10 +1,10 @@
-function bigM_version(generators, nodes, branches, loads, bigM, min_load_percent)
+function bigM_version(generators, nodes, branches, loads, bigM, min_load_percent, optimizer = with_optimizer(GLPK.Optimizer(msg_lev = GLPK.MSG_ALL)))
     set_gens = [g.name for g in generators if g.available];
     set_loads = [l.name for l in loads if l.available];
     set_buses = [b.name for b in nodes];
     set_branches = [ell.name for ell in branches];
                     
-    FP = Model(with_optimizer(GLPK.Optimizer))
+    FP = Model(optimizer)
                 
     @variable(FP, μ_plus[set_gens], lower_bound = 0);
     @variable(FP, β_plus[set_loads], lower_bound = 0);

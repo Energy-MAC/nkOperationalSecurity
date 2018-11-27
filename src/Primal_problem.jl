@@ -100,9 +100,9 @@ function branch_flows(m::JuMP.Model, branches)
 
 end                
     
-function primal_problem(generators, buses, branches, loads)    
+function primal_problem(generators, buses, branches, loads, optimizer = with_optimizer(Ipopt.Optimizer))    
     #Instantiate Model
-    PM = Model(with_optimizer(Ipopt.Optimizer))
+    PM = Model(optimizer)
     
     #make sets
     set_gens = [g.name for g in  generators if g.available]
