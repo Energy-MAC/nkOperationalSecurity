@@ -1,6 +1,7 @@
 function dual_balance_bigM(m::JuMP.Model, buses, branches, generators, loads)
     #get slack bus
     slackBus=0
+    slackNum=0
     for b in buses
         if b.bustype=="SF"
             slackBus = b.name
@@ -49,16 +50,18 @@ function dual_balance_bus1_bigM(m::JuMP.Model, buses, branches, generators, load
     dual_bal_bus1 =  AffExpr(0.0)
     #get slack bus
     slackBus=0
+    slackNum=0
     for b in buses
         if b.bustype=="SF"
             slackBus = b.name
+            slackNum = b.number
         end
     end
     bus_name_index = slackBus
 
     JuMP.add_to_expression!(dual_bal_bus1, m[:ζ] )
     
-    br_aux = [br for br in branches if br.connectionpoints.from.number == 1]
+    br_aux = [br for br in branches if br.connectionpoints.from.number == slackNum]
     
     for b in br_aux
         JuMP.add_to_expression!(dual_bal_bus1,( (-1)*m[:η][b.name]*(1/b.x) + (1/b.x)*m[:y][b.name] ))

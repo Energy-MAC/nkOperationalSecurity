@@ -1,6 +1,7 @@
 function dual_balance_no_z(m::JuMP.Model, buses, branches, generators, loads)
     #get slack bus
     slackBus=0
+    slackNum=0
     for b in buses
         if b.bustype=="SF"
             slackBus = b.name
@@ -49,9 +50,11 @@ end
 function dual_balance_bus1_no_z(m::JuMP.Model, buses, branches, generators, loads)
     #get slack bus
     slackBus=0
+    slackNum=0
     for b in buses
         if b.bustype=="SF"
             slackBus = b.name
+            slackNum = b.number
         end
     end
     
@@ -60,7 +63,7 @@ function dual_balance_bus1_no_z(m::JuMP.Model, buses, branches, generators, load
     bus_name_index = slackBus
 
     
-    br_aux = [br for br in branches if br.connectionpoints.from.number == 1]
+    br_aux = [br for br in branches if br.connectionpoints.from.number == slackNum]
     
     for b in br_aux
         JuMP.add_to_expression!(dual_bal_bus1,( (0-1)*m[:η][b.name]*(1/b.x) ))
