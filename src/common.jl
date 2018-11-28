@@ -69,12 +69,11 @@ end
             
 function dual_demand_bound(m, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes, min_load_percent)
         total_load = 0
+                
         for l in loads
             total_load=total_load+l.maxactivepower
         end
-        if total_load < 10
-                    total_load = 2.57
-        end 
+
         dual_obj = dual_objective(m, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes)
         dual_obj_constraint = @constraint(m, Dual_obj_constraint, dual_obj <= min_load_percent*total_load)
 end

@@ -16,7 +16,7 @@ function bigM_version(generators, nodes, branches, loads, bigM, min_load_percent
     @variable(FP, η[set_branches]);
     @variable(FP, ζ);
     @variable(FP, z[set_branches], Bin);
-    @variable(FP, y[set_branches], lower_bound = 0.0, upper_bound = bigM);
+    @variable(FP, y[set_branches], lower_bound = -bigM, upper_bound = bigM);
                             
     dual_gens(FP, λ, μ_plus, set_buses, generators)
     dual_loads(FP, λ, β_plus, set_buses, loads)                
