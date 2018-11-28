@@ -34,10 +34,10 @@ function nodal_balance(m::JuMP.Model, buses, branches, generators, loads)
     
     
     pf_balance = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(bus_name_index)), bus_name_index)
-
+    
     for (ix,bus) in enumerate(bus_name_index)
-
-        pf_balance[bus] = @constraint(m, netinjection[ix] == 0)
+        
+       isassigned(netinjection,ix) ? pf_balance[bus] = @constraint(m, netinjection[ix] == 0) : pf_balance[bus] = @constraint(m, 0 == 0)
         
     end
 
