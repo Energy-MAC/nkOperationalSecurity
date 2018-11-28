@@ -1,7 +1,7 @@
 using Test
-#@test try include("../src/nKOS.jl"); true finally end;
+@test try include("../src/nKOS.jl"); true finally end;
 
-include("src/nKOS.jl");
+include("../src/nKOS.jl");
 
 @testset "Run basics" begin
     for k in 1:14
