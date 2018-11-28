@@ -38,6 +38,8 @@ function dual_balance_no_z(m::JuMP.Model, buses, branches, generators, loads)
     for (ix,bus) in enumerate(bus_name_index[1:end])
         if bus != slackBus
             dual_balance[bus] = @constraint(m, dual_bal[ix] == 0)
+        else
+           dual_balance[bus] = @constraint(m, 0.0 == 0.0)    
         end 
         
     end
