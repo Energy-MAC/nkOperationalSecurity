@@ -4,7 +4,7 @@ using Test
 include("../src/nKOS.jl");
 
 @testset "Run basics" begin
-    for k in 1:14
+    for k in 1:length(branches14)
     @test try        
         s = setdiff!(collect(1:length(branches14)), [k])
         branches_k = branches14[s]
