@@ -1,6 +1,5 @@
 using JuMP
 using PowerSystems
-using SCS
 using Ipopt
 using GLPK
 
