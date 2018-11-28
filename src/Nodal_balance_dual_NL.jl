@@ -1,5 +1,13 @@
 function dual_balance_zvar(m::JuMP.Model, buses, branches, generators, loads)
-    
+    #get slack bus
+    slackBus=0
+    slackNum=0
+    for b in buses
+        if b.bustype=="SF"
+            slackBus = b.name
+            slackNum = b.number
+        end
+    end
     dual_bal =  JumpQuadExpressionArray(undef, length(buses))
 
     bus_name_index = [b.name for b in buses]
@@ -27,10 +35,10 @@ function dual_balance_zvar(m::JuMP.Model, buses, branches, generators, loads)
     
     dual_balance = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(bus_name_index)), bus_name_index)
 
-    for (ix,bus) in enumerate(bus_name_index[2:end])
-
-        dual_balance[bus] = @constraint(m, dual_bal[ix] == 0)
-        
+    for (ix,bus) in enumerate(bus_name_index[1:end])
+        if bus != slackBus
+            dual_balance[bus] = @constraint(m, dual_bal[ix] == 0)
+        end
     end
 
     JuMP.register_object(m, :Dual_Balance, dual_balance)
@@ -41,10 +49,18 @@ end
 
 function dual_balance_bus1_zvar(m::JuMP.Model, buses, branches, generators, loads)
     dual_bal_bus1 =  JuMP.GenericQuadExpr{Float64,VariableRef}()
-
-    bus_name_index = buses[1].name
+    #get slack bus
+    slackBus=0
+    slackNum=0
+    for b in buses
+        if b.bustype=="SF"
+            slackBus = b.name
+            slackNum = b.number
+        end
+    end
+    bus_name_index = slackBus
     
-    for b in [br for br in branches if br.connectionpoints.from.number == 1]
+    for b in [br for br in branches if br.connectionpoints.from.number == slackNum]
         JuMP.add_to_expression!(dual_bal_bus1,((m[:z][b.name]-1)*m[:η][b.name]*(1/b.x) ))
     end
 
