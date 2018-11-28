@@ -1,10 +1,10 @@
-function NL_version(generators, nodes, branches, loads, min_load_percent)
+function NL_version(generators, nodes, branches, loads, min_load_percent, optimizer = with_optimizer(Ipopt.Optimizer))
     set_gens = [g.name for g in generators if g.available];
     set_loads = [l.name for l in loads if l.available];
     set_buses = [b.name for b in nodes];
     set_branches = [ell.name for ell in branches];
                 
-    DM = Model(with_optimizer(Ipopt.Optimizer))
+    DM = Model(optimizer)
                 
     @variable(DM, μ_plus[set_gens], lower_bound = 0, start = 0.0);
     #@variable(DM, μ_minus[set_gens], lower_bound = 0);
