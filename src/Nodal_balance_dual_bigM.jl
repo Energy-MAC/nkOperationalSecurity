@@ -80,13 +80,15 @@ function bigM_constraints(m::JuMP.Model, devices, bigM)
     dual_bigM_one = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index) 
     dual_bigM_two = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index) 
     dual_bigM_three = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index) 
+    dual_bigM_four = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index) 
 
     for (ix, name) in enumerate(name_index)
 
         if name == devices[ix].name
             dual_bigM_one[name] = @constraint(m, m[:y][name] <= bigM*m[:z][name])
-            dual_bigM_two[name] = @constraint(m, m[:y][name] <= m[:η][name])
-            dual_bigM_three[name] = @constraint(m, m[:y][name] >= m[:η][name] - bigM*(1-m[:z][name]))         
+            dual_bigM_two[name] = @constraint(m, m[:y][name] >= -bigM*m[:z][name])
+            dual_bigM_three[name] = @constraint(m, m[:y][name] <= m[:η][name] + bigM*(1-m[:z][name]))
+            dual_bigM_four[name] = @constraint(m, m[:y][name] >= m[:η][name] - bigM*(1-m[:z][name]))         
         else
             error("Bus name in Array and variable do not match branches in BigM constraints")
         end
@@ -94,6 +96,7 @@ function bigM_constraints(m::JuMP.Model, devices, bigM)
     JuMP.register_object(m, :dual_bigM_one, dual_bigM_one)
     JuMP.register_object(m, :dual_bigM_two, dual_bigM_two) 
     JuMP.register_object(m, :dual_bigM_three, dual_bigM_three)
+    JuMP.register_object(m, :dual_bigM_four, dual_bigM_four)
 
 end
             
