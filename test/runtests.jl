@@ -6,7 +6,7 @@ include("../src/nKOS.jl");
 @testset "Run basics" begin
     for k in 1:14
     @test try        
-        s = setdiff!(collect(1:14), [k])
+        s = setdiff!(collect(1:length(branches14)), [k])
         branches_k = branches14[s]
         PP = primal_problem(generators14, nodes14, branches_k, loads14, with_optimizer(GLPK.Optimizer))
         DP = dual_problem(generators14, nodes14, branches_k, loads14, with_optimizer(GLPK.Optimizer))
