@@ -119,18 +119,18 @@ function primal_problem(generators, buses, branches, loads, optimizer = with_opt
     end
                 
     #generate variables     
-    @variable(PM, P_th[set_gens], lower_bound = 0, start=0.0)
+    @variable(PM, P_th[set_gens], lower_bound = 0)
     @variable(PM, D[set_loads], lower_bound =  0) 
         
-    for (ix,d) in enumerate(PM[:D])
-        JuMP.set_start_value(d,loads[ix].maxactivepower)
-    end
+    #for (ix,d) in enumerate(PM[:D])
+    #    JuMP.set_start_value(d,loads[ix].maxactivepower)
+    #end
 
-    @variable(PM, fl[set_lines], start=0.0) 
+    @variable(PM, fl[set_lines]) 
 
     #@variable(PM, z[set_lines] == 0.0, start=0.0) # add the Bin tag Later in order to make this code run with Ipopt
 
-    @variable(PM, θ[set_buses], start=0.0);  
+    @variable(PM, θ[set_buses]);  
         
     for name in θ.axes[1][1:end]
         if name != slackBus
