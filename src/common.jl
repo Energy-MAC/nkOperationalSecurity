@@ -21,7 +21,7 @@ function dual_loads(m, λ, β_plus, set_buses, devices)
     for (ix, name) in enumerate(name_index)
 
         if name == devices[ix].name
-            dual_load[name] = @constraint(m, -λ[set_buses[devices[ix].bus.number]] + β_plus[name] >=-1)
+            dual_load[name] = @constraint(m, -λ[set_buses[devices[ix].bus.number]] + β_plus[name] >=1)
         else
             error("Bus name in Array and variable do not match loads")
         end
