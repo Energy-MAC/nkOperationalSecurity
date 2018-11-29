@@ -17,7 +17,7 @@ function bilinear_version(generators, nodes, branches, loads, min_load_percent, 
     @variable(FP, ν_plus[set_buses], lower_bound = 0.0);
     @variable(FP, ν_minus[set_buses], lower_bound = 0.0);
     @variable(FP, λ[set_buses]);
-    @variable(FP, η[set_branches], lower_bound=2*total_load, upper_bound=2*total_load);
+    @variable(FP, η[set_branches], lower_bound=-2*total_load, upper_bound=2*total_load);
     @variable(FP, ζ);
     @variable(FP, z[set_branches],lower_bound = 0.0,upper_bound = 1.0);
     @variable(FP, w[set_branches]);
