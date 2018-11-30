@@ -22,6 +22,7 @@ end
 
 
 function dual_problem_test(generators, nodes, branches, loads, z, optimizer=with_optimizer(Ipopt.Optimizer))
+    DM = Model(optimizer)
     
     dual_variables(DM, generators, nodes, branches, loads)
     
