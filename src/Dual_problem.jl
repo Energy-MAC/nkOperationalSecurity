@@ -26,7 +26,6 @@ function dual_problem_test(generators, nodes, branches, loads, z, optimizer=with
     dual_variables(DM, generators, nodes, branches, loads)
     
     set_branches = [ell.name for ell in branches];
-    @variable(m, z[set_branches],lower_bound = 0.0,upper_bound = 1.0);
     
     dual_gens(DM, buses, generators)
     dual_loads(DM, buses, loads)                
