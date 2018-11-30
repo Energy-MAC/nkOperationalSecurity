@@ -28,9 +28,9 @@ function dual_problem_test(generators, nodes, branches, loads, z, optimizer=with
     
     set_branches = [ell.name for ell in branches];
     
-    dual_gens(DM, buses, generators)
-    dual_loads(DM, buses, loads)                
-    dual_branches(DM, buses, branches)                
+    dual_gens(DM, nodes, generators)
+    dual_loads(DM, nodes, loads)                
+    dual_branches(DM, nodes, branches)                
     dual_balance_fixed_z(DM, nodes, branches, generators, loads,z)
     dual_balance_bus1_fixed_z(DM, nodes, branches, generators, loads,z)            
                 
