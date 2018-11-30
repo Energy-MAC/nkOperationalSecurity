@@ -27,6 +27,8 @@ include("bigM_version.jl")
 include("Nodal_balance_dual_NL.jl")
 include("NL_version.jl")
 
-include("Nodal_balance_dual_bilinear.jl")
-include("bilinear_version.jl")
+include("Nodal_balance_dual_lambda_continous.jl")
+include("lambda_continous_version.jl")
 
+include("Nodal_balance_dual_lambda_integer.jl")
+include("lambda_integer_version.jl")

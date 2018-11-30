@@ -41,5 +41,6 @@ end
 @testset "Run N-K Versions" begin
     @test try   BM = bigM_version(generators14, nodes14, branches14, loads14, 5000, 0.7); JuMP.optimize!(BM); true finally end
     @test try  NL = NL_version(generators14, nodes14, branches14, loads14, 0.7); JuMP.optimize!(NL); true finally end
-    @test try BL = bilinear_version(generators14, nodes14, branches14, loads14, 0.7); JuMP.optimize!(BL); true finally end                    
+    @test try BLc = lambda_c_version(generators14, nodes14, branches14, loads14, 0.7); JuMP.optimize!(BLc); true finally end                    
+    @test try BLi = lambda_i_version(generators14, nodes14, branches14, loads14, 0.7); JuMP.optimize!(BLi); true finally end                    
 end

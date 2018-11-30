@@ -17,10 +17,17 @@ function dual_variables(m, generators, nodes, branches, loads)
     @variable(m, λ[set_buses]);
     @variable(m, η[set_branches], lower_bound=-2*total_load, upper_bound=2*total_load);
     @variable(m, ζ);
+    
 end
 
-function dual_gens(m, λ, μ_plus, set_buses, devices)
+function dual_gens(m, nodes, devices)
+    
+    λ = m[:λ] 
+    μ_plus = m[:μ_plus] 
+    
+    set_buses = [b.name for b in nodes];
     name_index = μ_plus.axes[1]
+    
     dual_gen = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index) 
 
     for (ix, name) in enumerate(name_index)
@@ -35,7 +42,12 @@ function dual_gens(m, λ, μ_plus, set_buses, devices)
 end
             
             
-function dual_loads(m, λ, β_plus, set_buses, devices)
+function dual_loads(m, nodes, devices)
+    
+    λ = m[:λ]
+    β_plus = m[:β_plus]   
+        
+    set_buses = [b.name for b in nodes];    
     name_index = β_plus.axes[1] 
     dual_load = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index) 
 
@@ -51,7 +63,15 @@ function dual_loads(m, λ, β_plus, set_buses, devices)
 end
             
             
-function dual_branches(m, λ, η, α_plus, α_minus, set_buses, devices)
+function dual_branches(m, nodes, devices)
+            
+    λ = m[:λ]
+    η = m[:η]
+            
+    α_plus = m[:α_plus]
+    α_minus = m[:α_minus]        
+
+    set_buses = [b.name for b in nodes];           
     name_index = α_plus.axes[1]
     dual_branch = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index) 
 
@@ -69,7 +89,18 @@ function dual_branches(m, λ, η, α_plus, α_minus, set_buses, devices)
 end
 
     
-function dual_objective(m, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes)
+function dual_objective(m, branches, generators, loads, nodes)
+                
+    α_plus = m[:α_plus]
+    α_minus = m[:α_minus] 
+
+    μ_plus = m[:μ_plus]            
+    
+    β_plus = m[:β_plus]
+                
+    ν_plus = m[:ν_plus]
+    ν_minus = m[:ν_minus]                
+                
     obj_func = AffExpr(0.0)
     
     for b in branches
@@ -88,15 +119,25 @@ function dual_objective(m, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minu
     return obj_func
 end
             
-function dual_demand_bound(m, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes, min_load_percent)
-        total_load = 0
+function dual_demand_bound(m, branches, generators, loads, nodes, min_load_percent)
+        total_load = 0.0
+                
+        α_plus = m[:α_plus]
+        α_minus = m[:α_minus] 
+
+        μ_plus = m[:μ_plus]            
+
+        β_plus = m[:β_plus]
+
+        ν_plus = m[:ν_plus]
+        ν_minus = m[:ν_minus]            
                 
         for l in loads
             total_load=total_load+l.maxactivepower
         end
 
-        dual_obj = dual_objective(m, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes)
+        dual_obj = dual_objective(m, branches, generators, loads, nodes)
+                
         dual_obj_constraint = @constraint(m, Dual_obj_constraint, dual_obj <= min_load_percent*total_load)
 end
-            
-function             
+                
