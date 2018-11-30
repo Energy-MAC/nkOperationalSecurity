@@ -75,30 +75,40 @@ function dual_balance_bus1_bilinear(m::JuMP.Model, buses, branches, generators, 
 end
 
 
-function dual_bilinear_constraints(FP, branches)
+function dual_bilinear_constraints_cont(m, branches)
+    
+    z = m[:z]
+    
+    set_branches = [ell.name for ell in branches];
+    
+    @variable(m, z_h, lower_bound = 0.0, upper_bound = 1.0)
+    
+    @constraint(m, z_h >= sum(z[i] for i in set_branches) - length(set_branches) +1)
+    
     for b in branches
-        relaxation_bilinear(FP, FP[:η][b.name], FP[:z][b.name], FP[:w][b.name])
+        relaxation_bilinear_cont(m, m[:η][b.name], m[:z][b.name], m[:w][b.name], m[:z_h])
     end
 end
 
 
-function relaxation_bilinear(m, x, z, w)
+function relaxation_bilinear_cont(m, x, z, w, z_h)
     x_ub = 80
     x_lb = -80
-    z_ub = 1
-    z_lb = 0
 
-    L = @variable(m, [1:4],upper_bound = 1.0, lower_bound = 0.0)
+    L = @variable(m, [1:2], upper_bound = 1.0, lower_bound = 0.0)
 
-    w_val = [x_lb * z_lb
-             x_lb * z_ub  
-             x_ub * z_lb 
-             x_ub * z_ub]
+    w_val = [x_lb 
+             x_ub]
 
-    @constraint(m, w == sum(w_val[i]*L[i] for i in 1:4))
-    @constraint(m, x == (L[1] + L[2])*x_lb +
-                        (L[3] + L[4])*x_ub)
-    @constraint(m, z == (L[1] + L[2])*z_lb +
-                        (L[3] + L[4])*z_ub)
-    @constraint(m, sum(L) == 1)
+    @constraint(m, w == sum(w_val[i]*L[i] for i in 1:2))
+    
+    @constraint(m, x <= (L[1])*x_lb +
+                        (L[2])*x_ub +x_ub*(1 - z_h) )
+    @constraint(m, x >= (L[1])*x_lb +
+                        (L[2])*x_ub + +x_lb*(1 - z_h))
+    @constraint(m, z_h <= z)
+    @constraint(m, sum(L) == z_h)
+    
+    
+    
 end
