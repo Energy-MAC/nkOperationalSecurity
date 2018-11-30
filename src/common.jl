@@ -1,3 +1,24 @@
+function dual_variables(m, generators, nodes, branches, loads)
+   total_load = 0.0
+    for l in loads
+        total_load=total_load+l.maxactivepower
+    end
+    set_gens = [g.name for g in generators if g.available];
+    set_loads = [l.name for l in loads if l.available];
+    set_buses = [b.name for b in nodes];
+    set_branches = [ell.name for ell in branches];
+                
+    @variable(m, μ_plus[set_gens], lower_bound = 0.0);
+    @variable(m, β_plus[set_loads], lower_bound = 0.0);
+    @variable(m, α_plus[set_branches], lower_bound = 0.0);
+    @variable(m, α_minus[set_branches], lower_bound = 0.0);
+    @variable(m, ν_plus[set_buses], lower_bound = 0.0);
+    @variable(m, ν_minus[set_buses], lower_bound = 0.0);
+    @variable(m, λ[set_buses]);
+    @variable(m, η[set_branches], lower_bound=-2*total_load, upper_bound=2*total_load);
+    @variable(m, ζ);
+end
+
 function dual_gens(m, λ, μ_plus, set_buses, devices)
     name_index = μ_plus.axes[1]
     dual_gen = JuMP.JuMPArray(Array{ConstraintRef}(undef,length(name_index)), name_index) 
