@@ -7,6 +7,7 @@ function bilinear_version(generators, nodes, branches, loads, min_load_percent, 
     set_branches = [ell.name for ell in branches];
     
     @variable(m, z[set_branches],lower_bound = 0.0,upper_bound = 1.0);
+    
     @variable(m, w[set_branches]);  
     
     dual_gens(FP, λ, μ_plus, set_buses, generators)
@@ -17,7 +18,6 @@ function bilinear_version(generators, nodes, branches, loads, min_load_percent, 
     dual_bilinear_constraints(FP, branches)
     dual_demand_bound(FP, α_plus, α_minus, μ_plus, β_plus, ν_plus, ν_minus, branches, generators, loads, nodes, min_load_percent)
        
-    
     @objective(FP, Min, sum(z[i] for i in set_branches))                       
                     
     return(FP)
