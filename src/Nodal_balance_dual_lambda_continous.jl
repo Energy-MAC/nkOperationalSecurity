@@ -85,8 +85,8 @@ end
 
 
 function relaxation_bilinear_cont(m, x, z, w)
-    x_ub = 80
-    x_lb = -80
+    x_ub = 1
+    x_lb = -1
 
     L = @variable(m, [1:2], upper_bound = 1.0, lower_bound = 0.0)
 
