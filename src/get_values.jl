@@ -19,3 +19,18 @@ function get_primals(m)
         end
     end
 end
+                        
+
+function store_primals(m)
+    result = Dict{Any,Any}()
+    ref = [element.first for element in m.obj_dict if isa(element.second,JuMPArray{VariableRef})]
+    for c in ref
+        key = Symbol(c)
+        result_array = Array{Float64}(undef,1)
+            for ax in m.obj_dict[key]
+                push!(result_array,JuMP.value(ax))
+        end
+        result[key] = result_array
+    end
+    return result
+end
