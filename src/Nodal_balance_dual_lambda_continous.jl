@@ -85,8 +85,8 @@ end
 
 
 function relaxation_bilinear_cont(m, x, z, w)
-    x_ub = 1
-    x_lb = -1
+    x_ub = JuMP.upper_bound(x)
+    x_lb = JuMP.lower_bound(x)
 
     L = @variable(m, [1:2], upper_bound = 1.0, lower_bound = 0.0)
 
