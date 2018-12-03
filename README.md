@@ -15,7 +15,7 @@ In this repository we explore several formulations to solve the problem.
 | 0.9    | 4     | 0     | 251        | 5      |
 | 0.85   | 5     | 40%   | 3600       | 4      |
 | 0.8    | 7     | 57.14% | 3600       | 5      |
-| 0.75   | 9     | 66%    | 3600       | 5      |
+| 0.75   | 9     | 66.67%    | 3600       | 5      |
 | 0.7    | 11    | 72.72%| 3600       | 4      |
 
 
@@ -25,7 +25,7 @@ In this repository we explore several formulations to solve the problem.
 | 0.9    | 4     | 0     | 209        |   3     |
 | 0.85   | 5     | 40 %   | 3600       |  8    |
 | 0.8    | 7     |57.14%  | 3600       |   8    |
-| 0.75   |       |       |            |        |
+| 0.75   | 9    |   66.67%    |   3600         |    8    |
 | 0.7    |       |       |            |        |
 
 
