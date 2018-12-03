@@ -7,7 +7,39 @@ Although in many cases the use of linear approximations in power systems is suff
 
 In this repository we explore several formulations to solve the problem.
 
+## Solutions for 14 Bus System
 
+| Big M  | Sol   | Gap   | time (s)   | N sols |
+|--------|-------|-------|------------|--------|
+| 0.95   | 2     | 0     |    0.32    |  2      |
+| 0.9    |   4  |   0   |    288    |    5    |
+| 0.85   |     |    |        |     |
+| 0.8    |    | |        |       |
+| 0.75   |   |      |            |        |
+| 0.7    |      |       |           |      |
+
+
+| lambda_i | Sol   | Gap   | time (s)   | N sols |
+|--------|-------|-------|------------|--------|
+| 0.95   | 2     | 0     |    3.82    |  5      |
+| 0.9    |  4   |  0   |   312  |     4   |
+| 0.85   |     |    |        |     |
+| 0.8    |    | |        |       |
+| 0.75   |   |      |            |        |
+| 0.7    |      |       |           |      |
+
+
+| NL     | Sol   | round | Term Code       | time (ms)  |
+|--------|-------|-------|------------|--------|
+| 0.95   | 2.96  | 3     | optimal     | 55.2  |
+| 0.9    | 4.82   | 5     | optimal    | 62.1   |
+| 0.85   | 4.86  | 5     | optimal    | 83.2   |
+| 0.8    | 4.91  | 5    | optimal    | 102   |
+| 0.75   | 8.93  | 9    | optimal    | 360    |
+| 0.7    | 9.93  | 10    | optimal | 98.0   |
+
+
+## Solutions for 118 Bus System
 
 | Big M  | Sol   | Gap   | time (s)   | N sols |
 |--------|-------|-------|------------|--------|
@@ -29,7 +61,7 @@ In this repository we explore several formulations to solve the problem.
 | 0.7    |   12    |   66.67%    |    3600        |   7     |
 
 
-| NL     | Sol   | round | Term Code       | time   |
+| NL     | Sol   | round | Term Code       | time  (s) |
 |--------|-------|-------|------------|--------|
 | 0.95   | 3.77  | 4     | optimal     | 1.04   |
 | 0.9    | 3.97  | 4     | optimal    | 1.13   |
