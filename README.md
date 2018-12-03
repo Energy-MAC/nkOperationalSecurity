@@ -26,7 +26,7 @@ In this repository we explore several formulations to solve the problem.
 | 0.85   | 5     | 40 %   | 3600       |  8    |
 | 0.8    | 7     |57.14%  | 3600       |   8    |
 | 0.75   | 9    |   66.67%    |   3600         |    8    |
-| 0.7    |       |       |            |        |
+| 0.7    |   12    |   66.67%    |    3600        |   7     |
 
 
 | NL     | Sol   | round | Term Code       | time   |
