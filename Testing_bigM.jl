@@ -45,3 +45,5 @@ BLi = bigM_version(generators118, nodes118, branches118, loads118, 1000, 0.70, w
 @timeit to "0.70" JuMP.optimize!(BLi)
 sols["0.70"] = JuMP.objective_value(BLi)
 gap["0.70"] = (MathOptInterface.get(BLi, MathOptInterface.ObjectiveBound()) - JuMP.objective_value(BLi))/JuMP.objective_value(BLi)
+
+println(to)
