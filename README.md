@@ -7,25 +7,31 @@ Although in many cases the use of linear approximations in power systems is suff
 
 In this repository we explore several formulations to solve the problem.
 
+
+
 | Big M  | Sol   | Gap   | time (s)   | N sols |
 |--------|-------|-------|------------|--------|
 | 0.95   | 2     | 0     | 7.2        | 2      |
 | 0.9    | 4     | 0     | 251        | 5      |
 | 0.85   | 5     | 40%   | 3600       | 4      |
-| 0.8    | 7     | 57.14 | 3600       | 5      |
-| 0.75   | 9     | 66    | 3600       | 5      |
-| 0.7    | 11    | 72.72 | 3600       | 4      |
-|        |       |       |            |        |
-| lambda | Sol   |       | time (s)   |        |
+| 0.8    | 7     | 57.14% | 3600       | 5      |
+| 0.75   | 9     | 66%    | 3600       | 5      |
+| 0.7    | 11    | 72.72%| 3600       | 4      |
+
+
+| lambda_i | Sol   | Gap   | time (s)   |        |
+|--------|-------|-------|------------|--------|
 | 0.95   | 2     | 0     | 20.2       |        |
 | 0.9    | 4     | 0     | 209        |        |
-| 0.85   | 5     | 40    | 3600       |        |
+| 0.85   | 5     | 40 %   | 3600       |        |
 | 0.8    |       |       |            |        |
 | 0.75   |       |       |            |        |
 | 0.7    |       |       |            |        |
-|        |       |       |            |        |
-| NL     | Sol   | round | Term       | time   |
-| 0.95   | 3.77  | 4     | optimal    | 1.04   |
+
+
+| NL     | Sol   | round | Term Code       | time   |
+|--------|-------|-------|------------|--------|
+| 0.95   | 3.77  | 4     | optimal     | 1.04   |
 | 0.9    | 3.97  | 4     | optimal    | 1.13   |
 | 0.85   | 6.91  | 7     | optimal    | 1.21   |
 | 0.8    | 11.3  | 11    | optimal    | 1.16   |
