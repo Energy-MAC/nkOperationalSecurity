@@ -37,12 +37,13 @@ gap["0.80"] = (MathOptInterface.get(BLi, MathOptInterface.ObjectiveBound()) - Ju
 BLi = lambda_i_version(generators118, nodes118, branches118, loads118, 0.75, with_optimizer(Gurobi.Optimizer,TimeLimit = 3600));
 
 @timeit to "0.75" JuMP.optimize!(BLi)
-sols["0.80"] = JuMP.objective_value(BLi)
-gap["0.80"] = (MathOptInterface.get(BLi, MathOptInterface.ObjectiveBound()) - JuMP.objective_value(BLi))/JuMP.objective_value(BLi)
+sols["0.75"] = JuMP.objective_value(BLi)
+gap["0.75"] = (MathOptInterface.get(BLi, MathOptInterface.ObjectiveBound()) - JuMP.objective_value(BLi))/JuMP.objective_value(BLi)
 
-BLi = lambda_i_version(generators118, nodes118, branches118, loads118, 0.70, with_optimizer(Gurobi.OptimizerTimeLimit = 3600));
+BLi = lambda_i_version(generators118, nodes118, branches118, loads118, 0.70, with_optimizer(Gurobi.Optimizer,TimeLimit = 3600));
 
 @timeit to "0.70" JuMP.optimize!(BLi)
 sols["0.70"] = JuMP.objective_value(BLi)
 gap["0.70"] = (MathOptInterface.get(BLi, MathOptInterface.ObjectiveBound()) - JuMP.objective_value(BLi))/JuMP.objective_value(BLi)
 
+println(to)
