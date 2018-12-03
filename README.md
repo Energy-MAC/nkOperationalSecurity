@@ -19,7 +19,7 @@ In this repository we explore several formulations to solve the problem.
 | 0.7    | 11    | 72.72%| 3600       | 4      |
 
 
-| lambda_i | Sol   | Gap   | time (s)   |        |
+| lambda_i | Sol   | Gap   | time (s)   | N sols |
 |--------|-------|-------|------------|--------|
 | 0.95   | 2     | 0     | 20.2       |        |
 | 0.9    | 4     | 0     | 209        |        |
