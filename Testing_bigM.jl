@@ -58,7 +58,7 @@ BLi = bigM_version(generators118, nodes118, branches118, loads118, 1000, 0.70, w
 sols["0.70"] = JuMP.objective_value(BLi)
 gap["0.70"] = (MathOptInterface.get(BLi, MathOptInterface.ObjectiveBound()) - JuMP.objective_value(BLi))/JuMP.objective_value(BLi)
 results["0.70"] = get_primals(BLi)
-nsols["0.70"] = (MathOptInterface.get(BLi, MathOptInterface.ResultCount())
+nsols["0.70"] = (MathOptInterface.get(BLi, MathOptInterface.ResultCount());
 
 
 println(to)
